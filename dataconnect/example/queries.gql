@@ -1,0 +1,26 @@
+mutation CreateUserMutation($displayName: String!, $email: String!) @auth(level: USER) {
+  user_insert(data: {displayName: $displayName, email: $email, createdAt_expr: "request.time"})
+}
+
+query GetTransactionsForUser @auth(level: USER) {
+  transactions(where: {userId: {eq_expr: "auth.uid"}}) {
+    id
+    amount
+    date
+    description
+    type
+  }
+}
+
+mutation UpdateTransactionNotes($id: UUID!, $notes: String) @auth(level: USER) {
+  transaction_update(key: {id: $id}, data: {notes: $notes})
+}
+
+query ListCategories @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  categories {
+    id
+    name
+    type
+    description
+  }
+}

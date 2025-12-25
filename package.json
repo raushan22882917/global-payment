@@ -1,0 +1,39 @@
+{
+  "name": "admin-org-setup",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "setup:storage": "./scripts/enable-firebase-storage.sh",
+    "setup:storage:help": "node scripts/setup-firebase-storage.js",
+    "deploy:storage": "firebase deploy --only storage",
+    "test:logo": "node scripts/test-logo-upload.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "autoprefixer": "^10.4.16",
+    "firebase": "^10.14.1",
+    "next": "^15.1.0",
+    "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
+    "react-hot-toast": "^2.4.1",
+    "tailwindcss": "^3.3.6"
+  },
+  "devDependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^15.1.0",
+    "firebase-admin": "^13.6.0",
+    "typescript": "^5.3.3"
+  }
+}

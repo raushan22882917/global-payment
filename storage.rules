@@ -1,0 +1,47 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Organization logos - public read, authenticated write
+    match /logos/organizations/{orgId}/{fileName} {
+      allow read: if true; // Public read access for logos
+      allow write, delete: if request.auth != null
+        && request.resource.size < 5 * 1024 * 1024 // 5MB limit
+        && request.resource.contentType.matches('image/.*');
+    }
+    
+    // More permissive rule for testing - remove in production
+    match /logos/{allPaths=**} {
+      allow read: if true;
+      allow write, delete: if request.auth != null
+        && request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    // Payment QR codes - authenticated users only
+    match /qr-codes/{orgId}/{fileName} {
+      allow read, write, delete: if request.auth != null
+        && request.resource.size < 2 * 1024 * 1024 // 2MB limit
+        && request.resource.contentType.matches('image/.*');
+    }
+    
+    // Payment attachments - authenticated users only
+    match /attachments/{orgId}/{fileName} {
+      allow read, write, delete: if request.auth != null
+        && request.resource.size < 10 * 1024 * 1024; // 10MB limit
+    }
+    
+    // User profile pictures
+    match /profiles/{userId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write, delete: if request.auth != null 
+        && request.auth.uid == userId
+        && request.resource.size < 2 * 1024 * 1024 // 2MB limit
+        && request.resource.contentType.matches('image/.*');
+    }
+    
+    // Temporary permissive rule for debugging - remove in production
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

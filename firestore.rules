@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users Collection Rules
+    match /users/{userId} {
+      // Users can always read/write their own document
+      allow read, write: if isOwner(userId);
+      
+      // Any authenticated user can read other users (needed for org operations)
+      allow read: if isAuthenticated();
+      
+      // Only allow creation by authenticated users
+      allow create: if isAuthenticated();
+    }
+    
+    // Organizations Collection Rules
+    match /organizations/{orgId} {
+      // Any authenticated user can read organizations (needed for lookups)
+      allow read: if isAuthenticated();
+      
+      // Only authenticated users can create/update organizations
+      allow create, update: if isAuthenticated();
+      
+      // Prevent deletion for safety
+      allow delete: if false;
+    }
+    
+    // Organization Requests Collection Rules
+    match /organizationRequests/{requestId} {
+      // IMPORTANT: Allow unauthenticated users to create organization requests
+      // This is needed for the public organization request form
+      allow create: if true;
+      
+      // Authenticated users can read and update requests (for admin management)
+      allow read, update: if isAuthenticated();
+      
+      // Prevent deletion for audit purposes
+      allow delete: if false;
+    }
+    
+    // Approval Levels Collection Rules
+    match /approvalLevels/{levelId} {
+      // Any authenticated user can read approval levels
+      allow read: if isAuthenticated();
+      
+      // Only authenticated users can create/update approval levels
+      allow create, update: if isAuthenticated();
+      
+      // Allow deletion for management
+      allow delete: if isAuthenticated();
+    }
+    
+    // Payment Configs Collection Rules
+    match /paymentConfigs/{orgId} {
+      // Any authenticated user can read payment configs
+      allow read: if isAuthenticated();
+      
+      // Only authenticated users can create/update payment configs
+      allow create, update: if isAuthenticated();
+    }
+    
+    // Payment Requests Collection Rules
+    match /paymentRequests/{requestId} {
+      // Any authenticated user can read/write payment requests
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Workflow Instances Collection Rules
+    match /workflowInstances/{instanceId} {
+      // Any authenticated user can read/write workflow instances
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Audit Logs Collection Rules
+    match /auditLogs/{logId} {
+      // Any authenticated user can read audit logs
+      allow read: if isAuthenticated();
+      
+      // Only allow creation, not updates or deletes
+      allow create: if isAuthenticated();
+    }
+    
+    // General fallback for any other collections
+    match /{document=**} {
+      // Allow authenticated users to read/write any document
+      // This ensures the app works while we implement specific rules
+      allow read, write: if isAuthenticated();
+    }
+  }
+}

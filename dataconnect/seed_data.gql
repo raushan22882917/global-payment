@@ -1,0 +1,90 @@
+mutation CreateDemoData @transaction @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      createdAt: "2024-01-01T00:00:00Z",
+      displayName: "demouser1",
+      email: "demouser1@example.com"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      createdAt: "2024-01-01T00:00:00Z",
+      displayName: "demouser2",
+      email: "demouser2@example.com"
+    }
+  ])
+  category_insertMany(data: [
+    {
+      id: "660e8400-e29b-41d4-a716-446655440000",
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      name: "Food",
+      type: "Expense"
+    },
+    {
+      id: "660e8400-e29b-41d4-a716-446655440001",
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      name: "Rent",
+      type: "Expense"
+    }
+  ])
+  paymentMethod_insertMany(data: [
+    {
+      id: "770e8400-e29b-41d4-a716-446655440000",
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      name: "Visa",
+      type: "Credit Card",
+      lastFourDigits: "1234"
+    },
+    {
+      id: "770e8400-e29b-41d4-a716-446655440001",
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      name: "MasterCard",
+      type: "Credit Card",
+      lastFourDigits: "5678"
+    }
+  ])
+  transaction_insertMany(data: [
+    {
+      id: "880e8400-e29b-41d4-a716-446655440000",
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      categoryId: "660e8400-e29b-41d4-a716-446655440000",
+      amount: 50.00,
+      date: "2024-01-02",
+      description: "Groceries",
+      type: "Expense"
+    },
+    {
+      id: "880e8400-e29b-41d4-a716-446655440001",
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      categoryId: "660e8400-e29b-41d4-a716-446655440001",
+      amount: 1200.00,
+      date: "2024-01-05",
+      description: "Apartment Rent",
+      type: "Expense"
+    }
+  ])
+  userSubscription_insertMany(data: [
+    {
+      id: "990e8400-e29b-41d4-a716-446655440000",
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      categoryId: "660e8400-e29b-41d4-a716-446655440000",
+      paymentMethodId: "770e8400-e29b-41d4-a716-446655440000",
+      amount: 10.00,
+      name: "Netflix",
+      frequency: "Monthly",
+      nextDueDate: "2024-02-01",
+      startDate: "2024-01-01"
+    },
+    {
+      id: "990e8400-e29b-41d4-a716-446655440001",
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      categoryId: "660e8400-e29b-41d4-a716-446655440001",
+      paymentMethodId: "770e8400-e29b-41d4-a716-446655440001",
+      amount: 15.00,
+      name: "Spotify",
+      frequency: "Monthly",
+      nextDueDate: "2024-02-10",
+      startDate: "2024-01-10"
+    }
+  ])
+}

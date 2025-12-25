@@ -1,0 +1,47 @@
+type User @table {
+  displayName: String!
+  email: String!
+  createdAt: Timestamp!
+  photoUrl: String
+  currencyPreference: String
+}
+
+type Transaction @table {
+  type: String!
+  amount: Float!
+  date: Date!
+  description: String!
+  category: Category!
+  user: User!
+  notes: String
+  isRecurring: Boolean
+  isPaid: Boolean
+}
+
+type UserSubscription @table {
+  name: String!
+  amount: Float!
+  frequency: String!
+  startDate: Date!
+  nextDueDate: Date!
+  user: User!
+  description: String
+  reminderEnabled: Boolean
+  category: Category
+  paymentMethod: PaymentMethod
+}
+
+type Category @table {
+  name: String!
+  user: User!
+  description: String
+  type: String
+}
+
+type PaymentMethod @table {
+  name: String!
+  user: User!
+  type: String
+  lastFourDigits: String
+  expiryDate: Date
+}
